@@ -1,0 +1,278 @@
+cqlsh> CREATE KEYSPACE social_media1
+   ... WITH replication = {'class': 'SimpleStrategy', 'replication_factor': 1};
+cqlsh>
+cqlsh> USE social_media1;
+cqlsh:social_media1> CREATE TABLE posts1 (
+                 ...     post_id INT PRIMARY KEY,
+                 ...     user_id INT,
+                 ...     text TEXT,
+                 ...     timestamp TIMESTAMP,
+                 ...     likes INT,
+                 ...     comments INT
+                 ... );
+cqlsh:social_media1> select * from posts1;
+
+ post_id | comments | likes | text | timestamp | user_id
+---------+----------+-------+------+-----------+---------
+
+
+cqlsh:social_media1> CREATE TABLE social_media1.users1 (
+                 ...     user_id INT PRIMARY KEY,
+                 ...     username TEXT,
+                 ...     email TEXT,
+                 ...     full_name TEXT,
+                 ...     birthdate DATE,
+                 ...     registration_date TIMESTAMP
+                 ... );
+
+
+cqlsh:social_media1> select * from users1;
+
+ user_id | birthdate | email | full_name | registration_date | username
+---------+-----------+-------+-----------+-------------------+----------
+
+(0 rows)
+
+cqlsh:social_media1> select * from users1;
+
+ user_id | birthdate | email | full_name | registration_date | username
+---------+-----------+-------+-----------+-------------------+----------
+
+(0 rows)
+cqlsh:social_media1> CREATE TABLE social_media1.comments1 (
+                 ...     comment_id INT PRIMARY KEY,
+                 ...     post_id INT,
+                 ...     user_id INT,
+                 ...     text TEXT,
+                 ...     timestamp TIMESTAMP
+                 ... );
+cqlsh:social_media1>
+cqlsh:social_media1> select * from comments1;
+
+ comment_id | post_id | text | timestamp | user_id
+------------+---------+------+-----------+---------
+
+(0 rows)
+cqlsh:social_media1> CREATE TABLE social_media1.likes1 (
+                 ...     like_id INT PRIMARY KEY,
+                 ...     post_id INT,
+                 ...     user_id INT,
+                 ...     timestamp TIMESTAMP
+                 ... );
+cqlsh:social_media1> select * from likes1;
+
+ like_id | post_id | timestamp | user_id
+---------+---------+-----------+---------
+
+(0 rows)
+
+INSERT INTO social_media1.users1 (user_id, username, email, full_name, birthdate, registration_date)
+                 ...                 VALUES (1, 'user1', 'user1@example.com', 'User One', '1990-01-15', toTimestamp(now()));
+cqlsh:social_media1> > INSERT INTO social_media1.users1 (user_id, username, email, full_name, birthdate, registration_date)
+                 ...                VALUES (2, 'user2', 'user2@example.com', 'User Two', '1985-05-20', toTimestamp(now()));
+SyntaxException: line 1:0 no viable alternative at input '>' ([>]...)
+cqlsh:social_media1> INSERT INTO social_media1.users1 (user_id, username, email, full_name, birthdate, registration_date)
+                 ...                VALUES (2, 'user2', 'user2@example.com', 'User Two', '1985-05-20', toTimestamp(now()));
+cqlsh:social_media1> INSERT INTO social_media1.users1 (user_id, username, email, full_name, birthdate, registration_date)
+                 ...                 VALUES (3, 'user3', 'user3@example.com', 'User Three', '1995-09-10', toTimestamp(now()));
+cqlsh:social_media1> INSERT INTO social_media1.users1 (user_id, username, email, full_name, birthdate, registration_date)
+                 ...                VALUES (4, 'user4', 'user4@example.com', 'User Four', '1980-12-05', toTimestamp(now()));
+cqlsh:social_media1> > INSERT INTO social_media1.users1 (user_id, username, email, full_name, birthdate, registration_date)
+                 ...                 VALUES (5, 'user5', 'user5@example.com', 'User Five', '1998-03-25', toTimestamp(now()));
+SyntaxException: line 1:0 no viable alternative at input '>' ([>]...)
+cqlsh:social_media1> INSERT INTO social_media1.users1 (user_id, username, email, full_name, birthdate, registration_date)
+                 ...                 VALUES (5, 'user5', 'user5@example.com', 'User Five', '1998-03-25', toTimestamp(now()));
+cqlsh:social_media1> select * from user1;
+InvalidRequest: Error from server: code=2200 [Invalid query] message="unconfigured table user1"
+cqlsh:social_media1> select * from users1;
+
+ user_id | birthdate  | email             | full_name  | registration_date               | username
+---------+------------+-------------------+------------+---------------------------------+----------
+       5 | 1998-03-25 | user5@example.com |  User Five | 2023-10-27 06:30:04.673000+0000 |    user5
+       1 | 1990-01-15 | user1@example.com |   User One | 2023-10-27 06:25:34.645000+0000 |    user1
+       2 | 1985-05-20 | user2@example.com |   User Two | 2023-10-27 06:26:42.682000+0000 |    user2
+       4 | 1980-12-05 | user4@example.com |  User Four | 2023-10-27 06:29:29.165000+0000 |    user4
+       3 | 1995-09-10 | user3@example.com | User Three | 2023-10-27 06:27:12.095000+0000 |    user3
+
+(5 rows)
+cqlsh:social_media1>
+
+
+
+(5 rows)
+cqlsh:social_media1> INSERT INTO social_media1.posts1 (post_id, user_id, text, timestamp, likes, comments)
+                 ...                VALUES (1, 1, 'Post 1 by User 1', toTimestamp(now()), 10, 5);
+cqlsh:social_media1> INSERT INTO social_media1.posts1 (post_id, user_id, text, timestamp, likes, comments)
+                 ...                VALUES (2, 1, 'Post 2 by User 1', toTimestamp(now()), 15, 8);
+cqlsh:social_media1> INSERT INTO social_media1.posts1 (post_id, user_id, text, timestamp, likes, comments)
+                 ...                 VALUES (3, 2, 'Post 1 by User 2', toTimestamp(now()), 8, 3);
+cqlsh:social_media1> INSERT INTO social_media1.posts1 (post_id, user_id, text, timestamp, likes, comments)
+                 ...                  VALUES (4, 2, 'Post 2 by User 2', toTimestamp(now()), 12, 6);
+cqlsh:social_media1> INSERT INTO social_media1.posts1 (post_id, user_id, text, timestamp, likes, comments)
+                 ...                 VALUES (5, 3, 'Post 1 by User 3', toTimestamp(now()), 5, 2);
+cqlsh:social_media1> > INSERT INTO social_media1.posts1 (post_id, user_id, text, timestamp, likes, comments)
+                 ...                VALUES (6, 3, 'Post 2 by User 3', toTimestamp(now()), 7, 4);
+SyntaxException: line 1:0 no viable alternative at input '>' ([>]...)
+cqlsh:social_media1> INSERT INTO social_media1.posts1 (post_id, user_id, text, timestamp, likes, comments)
+                 ...                VALUES (6, 3, 'Post 2 by User 3', toTimestamp(now()), 7, 4);
+cqlsh:social_media1> INSERT INTO social_media1.posts1 (post_id, user_id, text, timestamp, likes, comments)
+                 ...                  VALUES (7, 4, 'Post 1 by User 4', toTimestamp(now()), 20, 10);
+cqlsh:social_media1> INSERT INTO social_media1.posts1 (post_id, user_id, text, timestamp, likes, comments)
+                 ... VALUES (8, 4, 'Post 2 by User 4', toTimestamp(now()), 25, 15);
+cqlsh:social_media1> > INSERT INTO social_media1.posts1 (post_id, user_id, text, timestamp, likes, comments)
+                 ...                VALUES (9, 5, 'Post 1 by User 5', toTimestamp(now()), 3, 1);
+SyntaxException: line 1:0 no viable alternative at input '>' ([>]...)
+cqlsh:social_media1> INSERT INTO social_media1.posts1 (post_id, user_id, text, timestamp, likes, comments)
+                 ...                VALUES (9, 5, 'Post 1 by User 5', toTimestamp(now()), 3, 1);
+cqlsh:social_media1> INSERT INTO social_media1.posts1 (post_id, user_id, text, timestamp, likes, comments)
+                 ... VALUES (10, 5, 'Post 2 by User 5', toTimestamp(now()), 6, 2);
+cqlsh:social_media1> select * from posts1;
+
+ post_id | comments | likes | text             | timestamp                       | user_id
+---------+----------+-------+------------------+---------------------------------+---------
+       5 |        2 |     5 | Post 1 by User 3 | 2023-10-27 06:32:46.087000+0000 |       3
+      10 |        2 |     6 | Post 2 by User 5 | 2023-10-27 06:34:34.278000+0000 |       5
+       1 |        5 |    10 | Post 1 by User 1 | 2023-10-27 06:31:25.363000+0000 |       1
+       8 |       15 |    25 | Post 2 by User 4 | 2023-10-27 06:33:49.374000+0000 |       4
+       2 |        8 |    15 | Post 2 by User 1 | 2023-10-27 06:31:42.467000+0000 |       1
+       4 |        6 |    12 | Post 2 by User 2 | 2023-10-27 06:32:32.282000+0000 |       2
+       7 |       10 |    20 | Post 1 by User 4 | 2023-10-27 06:33:29.218000+0000 |       4
+       6 |        4 |     7 | Post 2 by User 3 | 2023-10-27 06:33:08.314000+0000 |       3
+       9 |        1 |     3 | Post 1 by User 5 | 2023-10-27 06:34:17.875000+0000 |       5
+       3 |        3 |     8 | Post 1 by User 2 | 2023-10-27 06:32:13.785000+0000 |       2
+
+
+(10 rows)
+cqlsh:social_media1> INSERT INTO social_media1.comments1 (comment_id, post_id, user_id, text, timestamp)
+                 ...                VALUES (1, 1, 2, 'Comment on Post 1 by User 2', toTimestamp(now()));
+cqlsh:social_media1> INSERT INTO social_media1.comments1 (comment_id, post_id, user_id, text, timestamp)
+                 ...                VALUES (2, 2, 3, 'Comment on Post 2 by User 3', toTimestamp(now()));
+cqlsh:social_media1> > INSERT INTO social_media1.comments1 (comment_id, post_id, user_id, text, timestamp)
+                 ...                VALUES (3, 3, 4, 'Comment on Post 3 by User 4', toTimestamp(now()));
+SyntaxException: line 1:0 no viable alternative at input '>' ([>]...)
+cqlsh:social_media1> INSERT INTO social_media1.comments1 (comment_id, post_id, user_id, text, timestamp)
+                 ...                VALUES (3, 3, 4, 'Comment on Post 3 by User 4', toTimestamp(now()));
+cqlsh:social_media1> INSERT INTO social_media1.comments1 (comment_id, post_id, user_id, text, timestamp)
+                 ...                 VALUES (4, 4, 5, 'Comment on Post 4 by User 5', toTimestamp(now()));
+cqlsh:social_media1> INSERT INTO social_media1.comments1 (comment_id, post_id, user_id, text, timestamp)
+                 ...                  VALUES (5, 5, 1, 'Comment on Post 5 by User 1', toTimestamp(now()));
+cqlsh:social_media1> INSERT INTO social_media1.comments1 (comment_id, post_id, user_id, text, timestamp)
+                 ...                VALUES (6, 6, 2, 'Comment on Post 6 by User 2', toTimestamp(now()));
+cqlsh:social_media1> INSERT INTO social_media1.comments1 (comment_id, post_id, user_id, text, timestamp)
+                 ...                  VALUES (7, 7, 3, 'Comment on Post 7 by User 3', toTimestamp(now()));
+cqlsh:social_media1> INSERT INTO social_media1.comments1 (comment_id, post_id, user_id, text, timestamp)
+                 ...                 VALUES (8, 8, 4, 'Comment on Post 8 by User 4', toTimestamp(now()));
+cqlsh:social_media1> INSERT INTO social_media1.comments1 (comment_id, post_id, user_id, text, timestamp)
+                 ...                  VALUES (9, 9, 5, 'Comment on Post 9 by User 5', toTimestamp(now()));
+cqlsh:social_media1> INSERT INTO social_media1.comments1 (comment_id, post_id, user_id, text, timestamp)
+                 ...                VALUES (10, 10, 1, 'Comment on Post 10 by User 1', toTimestamp(now()));
+cqlsh:social_media1> select * from comments1;
+
+ comment_id | post_id | text                         | timestamp                       | user_id
+------------+---------+------------------------------+---------------------------------+---------
+          5 |       5 |  Comment on Post 5 by User 1 | 2023-10-27 06:37:41.925000+0000 |       1
+         10 |      10 | Comment on Post 10 by User 1 | 2023-10-27 06:38:52.301000+0000 |       1
+          1 |       1 |  Comment on Post 1 by User 2 | 2023-10-27 06:36:17.036000+0000 |       2
+          8 |       8 |  Comment on Post 8 by User 4 | 2023-10-27 06:38:26.104000+0000 |       4
+          2 |       2 |  Comment on Post 2 by User 3 | 2023-10-27 06:36:34.687000+0000 |       3
+          4 |       4 |  Comment on Post 4 by User 5 | 2023-10-27 06:37:22.094000+0000 |       5
+          7 |       7 |  Comment on Post 7 by User 3 | 2023-10-27 06:38:12.962000+0000 |       3
+          6 |       6 |  Comment on Post 6 by User 2 | 2023-10-27 06:37:58.467000+0000 |       2
+          9 |       9 |  Comment on Post 9 by User 5 | 2023-10-27 06:38:39.193000+0000 |       5
+          3 |       3 |  Comment on Post 3 by User 4 | 2023-10-27 06:37:01.697000+0000 |       4
+
+(10 rows)
+
+
+cqlsh:social_media1> INSERT INTO social_media1.likes1 (like_id, post_id, user_id, timestamp)
+                 ...                 VALUES (1, 1, 2, toTimestamp(now()));
+cqlsh:social_media1> INSERT INTO social_media1.likes1 (like_id, post_id, user_id, timestamp)
+                 ...                  VALUES (2, 1, 3, toTimestamp(now()));
+cqlsh:social_media1> INSERT INTO social_media1.likes1 (like_id, post_id, user_id, timestamp)
+                 ...                VALUES (3, 2, 4, toTimestamp(now()));
+cqlsh:social_media1> INSERT INTO social_media1.likes1 (like_id, post_id, user_id, timestamp)
+                 ... VALUES (4, 3, 5, toTimestamp(now()));
+cqlsh:social_media1> INSERT INTO social_media1.likes1 (like_id, post_id, user_id, timestamp)
+                 ...                VALUES (5, 4, 1, toTimestamp(now()));
+cqlsh:social_media1> INSERT INTO social_media1.likes1 (like_id, post_id, user_id, timestamp)
+                 ...                VALUES (6, 5, 2, toTimestamp(now()));
+cqlsh:social_media1> INSERT INTO social_media1.likes1 (like_id, post_id, user_id, timestamp)
+                 ... 1 VALUES (7, 5, 3, toTimestamp(now()));
+SyntaxException: line 2:0 mismatched input '1' expecting K_VALUES (... post_id, user_id, timestamp)[1]...)
+cqlsh:social_media1> INSERT INTO social_media1.likes1 (like_id, post_id, user_id, timestamp)
+                 ... 1 VALUES (8, 6, 4, toTimestamp(now()));
+SyntaxException: line 2:0 mismatched input '1' expecting K_VALUES (... post_id, user_id, timestamp)[1]...)
+cqlsh:social_media1> INSERT INTO social_media1.likes1 (like_id, post_id, user_id, timestamp)
+                 ...  VALUES (7, 5, 3, toTimestamp(now()));
+cqlsh:social_media1> INSERT INTO social_media1.likes1 (like_id, post_id, user_id, timestamp)
+                 ...  VALUES (8, 6, 4, toTimestamp(now()));
+cqlsh:social_media1> INSERT INTO social_media1.likes1 (like_id, post_id, user_id, timestamp)
+                 ...                1VALUES (9, 7, 5, toTimestamp(now()));
+SyntaxException: line 2:15 mismatched input '1' expecting K_VALUES (... post_id, user_id, timestamp)               [1]...)
+cqlsh:social_media1> INSERT INTO social_media1.likes1 (like_id, post_id, user_id, timestamp)
+                 ...                VALUES (9, 7, 5, toTimestamp(now()));
+cqlsh:social_media1> INSERT INTO social_media1.likes1 (like_id, post_id, user_id, timestamp)
+                 ...                 VALUES (10, 8, 1, toTimestamp(now()));
+cqlsh:social_media1> select * from likes1;
+
+ like_id | post_id | timestamp                       | user_id
+---------+---------+---------------------------------+---------
+       5 |       4 | 2023-10-27 06:40:34.548000+0000 |       1
+      10 |       8 | 2023-10-27 06:42:23.353000+0000 |       1
+       1 |       1 | 2023-10-27 06:39:38.029000+0000 |       2
+       8 |       6 | 2023-10-27 06:41:47.428000+0000 |       4
+       2 |       1 | 2023-10-27 06:39:49.679000+0000 |       3
+       4 |       3 | 2023-10-27 06:40:14.009000+0000 |       5
+       7 |       5 | 2023-10-27 06:41:42.322000+0000 |       3
+       6 |       5 | 2023-10-27 06:41:04.330000+0000 |       2
+       9 |       7 | 2023-10-27 06:42:08.806000+0000 |       5
+       3 |       2 | 2023-10-27 06:39:59.508000+0000 |       4
+
+
+
+
+
+
+cqlsh:social_media1> select min(comments) from posts1;
+
+ system.min(comments)
+----------------------
+                    1
+
+(1 rows)
+
+Warnings :
+Aggregation query used without partition key
+
+cqlsh:social_media1> select max(comments) from posts1;
+
+ system.max(comments)
+----------------------
+                   15
+
+(1 rows)
+
+Warnings :
+Aggregation query used without partition key
+
+cqlsh:social_media1> select sum(comments) from posts1;
+
+ system.sum(comments)
+----------------------
+                   56
+
+(1 rows)
+
+Warnings :
+Aggregation query used without partition key
+
+cqlsh:social_media1> select avg(comments) from posts1;
+
+ system.avg(comments)
+----------------------
+                    5
+
+(1 rows)
+
+Warnings :
+Aggregation query used without partition key
